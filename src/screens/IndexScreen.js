@@ -2,27 +2,44 @@
 // React
 import React, { useContext } from 'react'
 import { View, Text, StyleSheet, FlatList, Button } from 'react-native'
-import BlogContext from '../context/BlogContext'
+import { Context } from '../context/BlogContext'
+import { Fontisto } from '@expo/vector-icons'
 
 const IndexScreen = () => {
-  const {data, addBlogPost} = useContext(BlogContext)
-  console.log(data)
+  // const value = useContext(BlogContext)
+  const { state, addBlogPost, deleteBlogPost } = useContext(Context)
 
   return (
     <View style={styles.container}>
-      {data.map(blog => {
+      {/* {state.map(blog => {
         return (
           <View key={blog.title}>
             <Text>{blog.title}</Text>
           </View>
         )
-      })}
-      <Button onPress={addBlogPost} title={'Add Post'}/>
+      })} */}
+      <View style={{ backgroundColor: 'red' }}>
+        <Button onPress={addBlogPost} title={'Add Post'}  color='#ffff'/>
+      </View>
+      <View
+        style={{
+          borderBottomWidth: 1,
+          borderColor: 'gray',
+          backgroundColor: 'black'
+        }}
+      >
+        <Button onPress={deleteBlogPost} title={'Delete Most Recent Post'} />
+      </View>
       <FlatList
-        data={data}
+        data={state}
         keyExtractor={blog => blog.title}
         renderItem={({ item }) => {
-          return <Text>{item.title}</Text>
+          return (
+            <View style={styles.row}>
+              <Text style={styles.text}>{item.title}</Text>
+              <Fontisto name='trash' size={28} color='black' />
+            </View>
+          )
         }}
       />
     </View>
@@ -35,7 +52,15 @@ const styles = StyleSheet.create({
     flex: '1'
   },
   text: {
-    fontSize: 16
+    fontSize: 22
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 20,
+    borderBottomWidth: 1,
+    borderColor: 'gray',
+    paddingHorizontal: 14
   }
 })
 
