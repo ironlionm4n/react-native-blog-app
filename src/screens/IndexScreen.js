@@ -12,22 +12,12 @@ import {
 import { Context } from '../context/BlogContext'
 import { Fontisto } from '@expo/vector-icons'
 
-const IndexScreen = () => {
+const IndexScreen = props => {
   // const value = useContext(BlogContext)
-  const { state, addBlogPost, deleteBlogPost, sortBlogs } = useContext(Context)
+  const { state, deleteBlogPost, sortBlogs } = useContext(Context)
 
   return (
     <View style={styles.container}>
-      {/* {state.map(blog => {
-        return (
-          <View key={blog.title}>
-            <Text>{blog.title}</Text>
-          </View>
-        )
-      })} */}
-      <View style={{ backgroundColor: 'red', margin: 7 }}>
-        <Button onPress={addBlogPost} title={'Add Post'} color='#ffff' />
-      </View>
       <View
         style={{
           borderBottomWidth: 1,
@@ -37,7 +27,12 @@ const IndexScreen = () => {
         }}
       >
         <Button
-          onPress={() => sortBlogs(true)}
+          onPress={() => {
+            if (state.length < 1) {
+              alert('No Blogs to sort')
+            }
+            sortBlogs(true)
+          }}
           title={'Sort Blogs By ID In Ascending Order'}
           color='#ffff'
         />
@@ -51,20 +46,31 @@ const IndexScreen = () => {
         }}
       >
         <Button
-          onPress={() => sortBlogs(false)}
+          onPress={() => {
+            if (state.length < 1) {
+              alert('No Blogs to sort')
+            }
+            sortBlogs(false)
+          }}
           title={'Sort Blogs By ID In Descending Order'}
           color='#ffff'
         />
       </View>
       <FlatList
         data={state}
-        keyExtractor={blog => blog.title}
+        keyExtractor={blog => blog.id}
         renderItem={({ item }) => {
           return (
             <View style={styles.row}>
-              <Text style={styles.text}>
-                {item.title} - ID: {item.id}
-              </Text>
+              <TouchableOpacity
+                onPress={() =>
+                  props.navigation.navigate('Details', { id: item.id })
+                }
+              >
+                <Text style={styles.text}>
+                  {item.title} - ID: {item.id}
+                </Text>
+              </TouchableOpacity>
               <TouchableOpacity onPress={() => deleteBlogPost(item.id)}>
                 <Fontisto name='trash' size={28} color='black' />
               </TouchableOpacity>
@@ -74,6 +80,20 @@ const IndexScreen = () => {
       />
     </View>
   )
+}
+
+IndexScreen.navigationOptions = props => {
+  const { navigation } = props
+  return {
+    headerRight: () => (
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Create')}
+        style={{ marginRight: 50 }}
+      >
+        <Fontisto name='plus-a' size={28} color='black' />
+      </TouchableOpacity>
+    )
+  }
 }
 
 const styles = StyleSheet.create({

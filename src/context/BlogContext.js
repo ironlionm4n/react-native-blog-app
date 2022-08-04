@@ -11,19 +11,14 @@ const blogReducer = (state, action) => {
       return [
         ...state,
         {
-          id: Math.floor(Math.random() * 999),
-          title: `Blog # ${state.length + 1}`
+          id: Math.floor(Math.random() * 9999),
+          title: action.payload.title,
+          content: action.payload.content
         }
       ]
     }
     case 'DELETE': {
-      const temp = state.filter(blog => blog.id !== action.payload)
-      console.log(temp)
-      // for(let i = 0; i < state.length; i++) {
-      //   console.log(state[i].title === temp[i].title)
-      //   console.log(temp[i].title)
-      // }
-      return temp
+      return [...state.filter(blog => blog.id !== action.payload)]
     }
     case 'SORT': {
       if (action.payload.asc) {
@@ -37,7 +32,6 @@ const blogReducer = (state, action) => {
           }
           return 0
         })
-        console.log('Temp', temp)
         return temp
       } else {
         let temp = [...state]
@@ -50,7 +44,6 @@ const blogReducer = (state, action) => {
           }
           return 0
         })
-        console.log('Temp', temp)
         return temp
       }
     }
@@ -60,14 +53,14 @@ const blogReducer = (state, action) => {
 }
 
 const addBlogPost = dispatch => {
-  return () => {
-    dispatch({ type: ADD_BLOG })
+  return (newBlog, callBack) => {
+    dispatch({ type: ADD_BLOG, payload: newBlog })
+    callBack()
   }
 }
 
 const deleteBlogPost = dispatch => {
   return id => {
-    console.log(id, 'id')
     dispatch({ type: DELETE_BLOG, payload: id })
   }
 }
