@@ -1,13 +1,20 @@
 // show a list of blog post to users
 // React
 import React, { useContext } from 'react'
-import { View, Text, StyleSheet, FlatList, Button } from 'react-native'
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Button,
+  TouchableOpacity
+} from 'react-native'
 import { Context } from '../context/BlogContext'
 import { Fontisto } from '@expo/vector-icons'
 
 const IndexScreen = () => {
   // const value = useContext(BlogContext)
-  const { state, addBlogPost, deleteBlogPost } = useContext(Context)
+  const { state, addBlogPost, deleteBlogPost, sortBlogs } = useContext(Context)
 
   return (
     <View style={styles.container}>
@@ -18,17 +25,36 @@ const IndexScreen = () => {
           </View>
         )
       })} */}
-      <View style={{ backgroundColor: 'red' }}>
-        <Button onPress={addBlogPost} title={'Add Post'}  color='#ffff'/>
+      <View style={{ backgroundColor: 'red', margin: 7 }}>
+        <Button onPress={addBlogPost} title={'Add Post'} color='#ffff' />
       </View>
       <View
         style={{
           borderBottomWidth: 1,
           borderColor: 'gray',
-          backgroundColor: 'black'
+          backgroundColor: 'blue',
+          margin: 7
         }}
       >
-        <Button onPress={deleteBlogPost} title={'Delete Most Recent Post'} />
+        <Button
+          onPress={() => sortBlogs(true)}
+          title={'Sort Blogs By ID In Ascending Order'}
+          color='#ffff'
+        />
+      </View>
+      <View
+        style={{
+          borderBottomWidth: 1,
+          borderColor: 'gray',
+          backgroundColor: 'purple',
+          margin: 7
+        }}
+      >
+        <Button
+          onPress={() => sortBlogs(false)}
+          title={'Sort Blogs By ID In Descending Order'}
+          color='#ffff'
+        />
       </View>
       <FlatList
         data={state}
@@ -36,8 +62,12 @@ const IndexScreen = () => {
         renderItem={({ item }) => {
           return (
             <View style={styles.row}>
-              <Text style={styles.text}>{item.title}</Text>
-              <Fontisto name='trash' size={28} color='black' />
+              <Text style={styles.text}>
+                {item.title} - ID: {item.id}
+              </Text>
+              <TouchableOpacity onPress={() => deleteBlogPost(item.id)}>
+                <Fontisto name='trash' size={28} color='black' />
+              </TouchableOpacity>
             </View>
           )
         }}
@@ -61,6 +91,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: 'gray',
     paddingHorizontal: 14
+  },
+  buttonView: {
+    borderBottomWidth: 1,
+    borderColor: 'gray',
+    backgroundColor: 'blue'
   }
 })
 
