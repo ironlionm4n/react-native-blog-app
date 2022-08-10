@@ -6,14 +6,18 @@ import { createAppContainer } from 'react-navigation'
 import IndexScreen from './src/screens/IndexScreen'
 import BlogDetailsScreen from './src/screens/BlogDetailsScreen'
 import CreateNewScreen from './src/screens/CreateNewScreen'
+import EditScreen from './src/screens/EditScreen'
 // Context
 import { Provider } from './src/context/BlogContext'
+
+
 
 const navigator = createStackNavigator(
   {
     Index: IndexScreen,
     Details: BlogDetailsScreen,
-    Create: CreateNewScreen
+    Create: CreateNewScreen,
+    Edit: EditScreen
   },
   {
     initialRouteName: 'Index',

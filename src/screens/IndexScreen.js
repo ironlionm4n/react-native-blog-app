@@ -1,6 +1,6 @@
 // show a list of blog post to users
 // React
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import {
   View,
   Text,
@@ -11,16 +11,21 @@ import {
 } from 'react-native'
 import { Context } from '../context/BlogContext'
 import { Fontisto } from '@expo/vector-icons'
+import { Feather } from '@expo/vector-icons'
 
 const IndexScreen = props => {
   // const value = useContext(BlogContext)
-  const { state, deleteBlogPost, sortBlogs } = useContext(Context)
+  const { state, deleteBlogPost, sortBlogs, getBlogPosts } = useContext(Context)
+
+  useEffect(() => {
+    getBlogPosts()
+  }, [])
 
   return (
     <View style={styles.container}>
       <View
         style={{
-          borderBottomWidth: 1,
+          borderBottomWidth: 2,
           borderColor: 'gray',
           backgroundColor: 'blue',
           margin: 7
@@ -74,6 +79,13 @@ const IndexScreen = props => {
               <TouchableOpacity onPress={() => deleteBlogPost(item.id)}>
                 <Fontisto name='trash' size={28} color='black' />
               </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  props.navigation.navigate('Edit', { blog: item })
+                }
+              >
+                <Feather name='edit-3' size={28} color='black' />
+              </TouchableOpacity>
             </View>
           )
         }}
@@ -110,7 +122,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     borderBottomWidth: 1,
     borderColor: 'gray',
-    paddingHorizontal: 14
+    marginHorizontal: 20
   },
   buttonView: {
     borderBottomWidth: 1,

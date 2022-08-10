@@ -1,9 +1,12 @@
 import React, { createContext, useReducer, useState } from 'react'
 import createDataContext from './createDataContext'
+import jsonServer from '../api/jsonServer'
 
 const ADD_BLOG = 'ADD'
 const DELETE_BLOG = 'DELETE'
 const SORT_BLOGS = 'SORT'
+const EDIT = 'EDIT'
+const GET = 'GET_BLOGPOSTS'
 
 const blogReducer = (state, action) => {
   switch (action.type) {
@@ -47,8 +50,29 @@ const blogReducer = (state, action) => {
         return temp
       }
     }
+    case 'EDIT': {
+      // let temp = [...state.filter(x => x.id !== action.payload.id)]
+      // return temp.concat(action.payload)
+      return state.map(blogPost => {
+        return blogPost.id === action.payload.id ? action.payload : blogPost
+      })
+    }
+
+    case 'GET_BLOGPOSTS': {
+      return action.payload
+    }
     default:
       return state
+  }
+}
+
+const getBlogPosts = dispatch => {
+  return async () => {
+    // any route passed here is concatenated onto baseURL of the axios instance
+    const response = await jsonServer.get('/blogposts')
+    console.log(response.data)
+
+    dispatch({ type: GET, payload: response.data })
   }
 }
 
@@ -70,12 +94,22 @@ const sortBlogs = dispatch => {
     dispatch({ type: SORT_BLOGS, payload: { asc: asc } })
   }
 }
+
+const editBlogPost = dispatch => {
+  return (blog, callBack) => {
+    console.log(blog)
+    dispatch({ type: EDIT, payload: blog })
+    callBack()
+  }
+}
 export const { Context, Provider } = createDataContext(
   blogReducer,
   {
     addBlogPost: addBlogPost,
     deleteBlogPost: deleteBlogPost,
-    sortBlogs: sortBlogs
+    sortBlogs: sortBlogs,
+    editBlogPost: editBlogPost,
+    getBlogPosts: getBlogPosts,
   },
   []
 )

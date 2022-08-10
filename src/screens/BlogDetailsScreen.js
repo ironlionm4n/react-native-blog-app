@@ -11,8 +11,8 @@ const BlogDetailsScreen = (props) => {
   return (
     <View style={styles.container}>
       <Text>Blog Details Screen</Text>
+      <Text>Blog ID: {blogPost.id}</Text>
       <Text>{blogPost.title}</Text>
-      <Text>{blogPost.id}</Text>
       <Text>{blogPost.content}</Text>
     </View>
   )

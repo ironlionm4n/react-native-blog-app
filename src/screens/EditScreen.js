@@ -8,18 +8,20 @@ import {
 import React, { Fragment, useState, useContext } from 'react'
 import { Context } from '../context/BlogContext'
 
-const CreateNewScreen = ({ navigation }) => {
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
-  const { addBlogPost } = useContext(Context)
+const EditScreen = ({ navigation }) => {
+  const blog = navigation.getParam('blog')
+  const [title, setTitle] = useState(blog.title)
+  const [content, setContent] = useState(blog.content)
+  const { editBlogPost } = useContext(Context)
+  console.log(blog)
 
   return (
     <Fragment>
       <View>
-        <Text>CreateNewScreen</Text>
+        <Text>EditScreen</Text>
       </View>
       <View>
-        <Text style={styles.label}>Enter Title</Text>
+        <Text style={styles.label}>Enter New Title</Text>
         <TextInput
           value={title}
           onChangeText={text => setTitle(text)}
@@ -27,7 +29,7 @@ const CreateNewScreen = ({ navigation }) => {
         />
       </View>
       <View>
-        <Text style={styles.label}>Enter Content</Text>
+        <Text style={styles.label}>Enter New Content</Text>
         <TextInput
           value={content}
           onChangeText={text => setContent(text)}
@@ -44,15 +46,15 @@ const CreateNewScreen = ({ navigation }) => {
           padding: 5
         }}
         onPress={() => {
-          addBlogPost({ title, content }, () => {
+          editBlogPost({ title, content, id: blog.id }, () => {
             navigation.navigate('Index')
           })
         }}
       >
         <Text
-          style={{ fontSize: 20, alignSelf: 'center', paddingVertical: 10 }}
+          style={{ fontSize: 22, alignSelf: 'center', paddingVertical: 10 }}
         >
-          Add Blog +
+          Edit Blog 
         </Text>
       </TouchableOpacity>
     </Fragment>
@@ -74,4 +76,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default CreateNewScreen
+export default EditScreen
