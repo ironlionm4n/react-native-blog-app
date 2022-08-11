@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios from 'axios'
 
 export default axios.create({
-    // must be updated once tunnel session expires
-    baseURL: 'https://85f1-2600-1702-2a0-13d0-2c9d-7b86-f6ba-53f9.ngrok.io'
+  // must be updated once tunnel session expires
+  baseURL: 'https://35f3-2600-1702-2a0-13d0-d8d9-2613-dfc2-ffe4.ngrok.io/'
 })

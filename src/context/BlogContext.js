@@ -1,28 +1,12 @@
-import React, { createContext, useReducer, useState } from 'react'
 import createDataContext from './createDataContext'
 import jsonServer from '../api/jsonServer'
 
-const ADD_BLOG = 'ADD'
-const DELETE_BLOG = 'DELETE'
 const SORT_BLOGS = 'SORT'
 const EDIT = 'EDIT'
 const GET = 'GET_BLOGPOSTS'
 
 const blogReducer = (state, action) => {
   switch (action.type) {
-    case 'ADD': {
-      return [
-        ...state,
-        {
-          id: Math.floor(Math.random() * 9999),
-          title: action.payload.title,
-          content: action.payload.content
-        }
-      ]
-    }
-    case 'DELETE': {
-      return [...state.filter(blog => blog.id !== action.payload)]
-    }
     case 'SORT': {
       if (action.payload.asc) {
         let temp = [...state]
@@ -57,7 +41,6 @@ const blogReducer = (state, action) => {
         return blogPost.id === action.payload.id ? action.payload : blogPost
       })
     }
-
     case 'GET_BLOGPOSTS': {
       return action.payload
     }
@@ -76,16 +59,20 @@ const getBlogPosts = dispatch => {
   }
 }
 
-const addBlogPost = dispatch => {
-  return (newBlog, callBack) => {
-    dispatch({ type: ADD_BLOG, payload: newBlog })
-    callBack()
+const addBlogPost = () => {
+  return async (newBlog, callBack) => {
+    console.log(newBlog)
+    await jsonServer.post('/blogposts', newBlog)
+
+    if (callBack) {
+      callBack()
+    }
   }
 }
 
 const deleteBlogPost = dispatch => {
-  return id => {
-    dispatch({ type: DELETE_BLOG, payload: id })
+  return async id => {
+    await jsonServer.delete(`/blogposts/${id}`)
   }
 }
 
@@ -96,12 +83,16 @@ const sortBlogs = dispatch => {
 }
 
 const editBlogPost = dispatch => {
-  return (blog, callBack) => {
-    console.log(blog)
-    dispatch({ type: EDIT, payload: blog })
-    callBack()
+  return async (blog, callBack) => {
+    await jsonServer.put(`/blogposts/${blog.id}`, blog)
+
+    if (callBack) {
+      callBack()
+    }
   }
+
 }
+
 export const { Context, Provider } = createDataContext(
   blogReducer,
   {
@@ -109,7 +100,7 @@ export const { Context, Provider } = createDataContext(
     deleteBlogPost: deleteBlogPost,
     sortBlogs: sortBlogs,
     editBlogPost: editBlogPost,
-    getBlogPosts: getBlogPosts,
+    getBlogPosts: getBlogPosts
   },
   []
 )
