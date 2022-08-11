@@ -1,5 +1,3 @@
-// show a list of blog post to users
-// React
 import React, { useContext, useEffect } from 'react'
 import {
   View,
@@ -19,6 +17,15 @@ const IndexScreen = props => {
 
   useEffect(() => {
     getBlogPosts()
+
+    const listener = props.navigation.addListener('didFocus', () => {
+      getBlogPosts()
+    })
+
+    // return functions from useEffect are only invoked once this component is unmounted
+    return ()=>{
+      listener.remove()
+    }
   }, [])
 
   return (

@@ -44,7 +44,7 @@ const CreateNewScreen = ({ navigation }) => {
           padding: 5
         }}
         onPress={() => {
-          addBlogPost({ title, content }, () => {
+          addBlogPost({ id: Math.floor(Math.random() * 9999), title, content }, () => {
             navigation.navigate('Index')
           })
         }}
